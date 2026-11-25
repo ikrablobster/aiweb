@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Продажи + Автоматизация — Концепция для торгового представителя</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #EBEBE6;
+      --bg-slide: #F7F7F5;
+      --bg-card: #FFFFFF;
+      --bg-dark: #18181B;
+      --bg-dark-card: #27272A;
+      --text-primary: #111111;
+      --text-secondary: #52525B;
+      --text-muted: #71717A;
+      --accent: #2563EB;
+      --accent-soft: #EFF6FF;
+      --accent-border: #BFDBFE;
+      --green: #15803D;
+      --green-soft: #F0FDF4;
+      --border: #E4E4E7;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Control Bar */
+    .toolbar {
+      width: 100%;
+      max-width: 1280px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding: 10px 18px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .toolbar-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #F4F4F5;
+      border-color: #D4D4D8;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--text-primary);
+      color: #FFFFFF;
+      border-color: var(--text-primary);
+    }
+
+    .btn-primary:hover {
+      background: #27272A;
+    }
+
+    /* Presentation Stage */
+    .stage-wrapper {
+      width: 100%;
+      max-width: 1280px;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      background: var(--bg-slide);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 48px 60px;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background: var(--bg-slide);
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    /* Slide Header & Footer */
+    .slide-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kicker span {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .page-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 54px;
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    h2 {
+      font-size: 32px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .lead {
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      max-width: 820px;
+    }
+
+    .bottom-banner {
+      margin-top: 22px;
+      padding: 14px 20px;
+      background: #FFFFFF;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      flex-shrink: 0;
+    }
+
+    .bottom-banner strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Slide 1 Specific */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 40px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+      font-size: 19px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      margin-top: 20px;
+      max-width: 640px;
+    }
+
+    .hero-card {
+      background: var(--bg-dark);
+      color: #FFFFFF;
+      padding: 36px 32px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 340px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.14);
+    }
+
+    .hero-card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #A1A1AA;
+      font-weight: 600;
+    }
+
+    .hero-flow {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-flow span {
+      color: #60A5FA;
+      display: block;
+      margin: 4px 0;
+    }
+
+    .hero-card-note {
+      font-size: 14px;
+      color: #D4D4D8;
+      border-top: 1px solid #3F3F46;
+      padding-top: 16px;
+    }
+
+    /* Slide 2 Grid */
+    .cards-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 26px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 26px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    .num-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 30px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .card p {
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    /* Slide 3 Flow */
+    .flow-4 {
+      display: grid;
+      grid-template-columns: 1fr 32px 1fr 32px 1fr 32px 1fr;
+      align-items: stretch;
+      gap: 8px;
+      margin-top: 28px;
+    }
+
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    /* Slide 4 Two Columns + Phone Mockup */
+    .split-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .phone-mockup {
+      background: #FFFFFF;
+      border: 2px solid #D4D4D8;
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tg-title {
+      font-weight: 800;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tg-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .tg-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .tg-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .tg-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .tg-box-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .tg-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 4px 0;
+      border-bottom: 1px dashed #E2E8F0;
+    }
+
+    .tg-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .tg-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 14px;
+      padding-top: 6px;
+      border-top: 1px solid #CBD5E1;
+    }
+
+    .tg-btn {
+      background: var(--accent);
+      color: #FFFFFF;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px;
+      border-radius: 7px;
+    }
+
+    .tg-btn.green {
+      background: var(--green);
+    }
+
+    .tg-note {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .feature-item {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .feature-item h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .feature-item p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* Slide 5 Admin Panel */
+    .admin-panel {
+      background: var(--bg-dark);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: #FFFFFF;
+    }
+
+    .admin-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #93C5FD;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .admin-row {
+      background: var(--bg-dark-card);
+      border: 1px solid #3F3F46;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 14.5px;
+    }
+
+    .admin-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: rgba(96, 165, 250, 0.15);
+      color: #60A5FA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .admin-row-right {
+      font-size: 12.5px;
+      color: #A1A1AA;
+      text-align: right;
+    }
+
+    /* Slide 6 Table */
+    .table-wrap {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: var(--bg-dark);
+      color: #FFFFFF;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+    }
+
+    td {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    tbody tr:nth-child(even) {
+      background: #FAFAFA;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status-yes {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .status-no {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: #F4F4F5;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .table-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .cards-3-compact {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .card-compact {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .card-compact h4 {
+      font-size: 14.5px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-compact p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Slide 7 Input -> Output */
+    .io-grid {
+      display: grid;
+      grid-template-columns: 1fr 44px 1.2fr;
+      gap: 12px;
+      align-items: stretch;
+      margin-top: 22px;
+    }
+
+    .io-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .io-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .input-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #F8FAFC;
+      border: 1px dashed #CBD5E1;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .photo-placeholder {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .post-preview {
+      background: #FAFAFA;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .post-title {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .post-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14.5px;
+      padding: 4px 0;
+      border-bottom: 1px solid #EFEFEF;
+    }
+
+    .post-cta {
+      margin-top: 6px;
+      background: var(--text-primary);
+      color: #FFFFFF;
+      text-align: center;
+      padding: 9px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Slide 8 Steps & Legal */
+    .steps-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .step-badge {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .legal-note {
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-muted);
+      background: #F4F4F5;
+      padding: 10px 14px;
+      border-radius: 8px;
+    }
+
+    /* Bottom Navigation Dots */
+    .nav-bar {
+      width: 100%;
+      max-width: 1280px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      height: 8px;
+      width: 28px;
+      border-radius: 999px;
+      background: #D4D4D8;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dot.active {
+      background: var(--text-primary);
+      width: 44px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Print / PDF Export Styles */
+    @media print {
+      @page {
+        size: 1280px 720px;
+        margin: 0;
+      }
+
+      body {
+        background: #FFFFFF;
+        padding: 0;
+        display: block;
+      }
+
+      .toolbar, .nav-bar {
+        display: none !important;
+      }
+
+      .stage-wrapper {
+        max-width: none;
+        aspect-ratio: auto;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        overflow: visible;
+      }
+
+      .slide {
+        display: flex !important;
+        width: 1280px;
+        height: 720px;
+        page-break-after: always;
+        break-after: page;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .slide:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .stage-wrapper {
+        aspect-ratio: auto;
+        min-height: 600px;
+      }
+      .slide {
+        padding: 28px 24px;
+      }
+      .hero-grid, .cards-3, .flow-4, .split-2, .cards-3-compact, .io-grid, .steps-3 {
+        grid-template-columns: 1fr;
+      }
+      .flow-arrow {
+        transform: rotate(90deg);
+        padding: 4px 0;
+      }
+      h1 { font-size: 36px; }
+      h2 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <div class="toolbar-title">THREADS → TELEGRAM ЗАКАЗ • ПРЕЗЕНТАЦИЯ КОНЦЕПЦИИ</div>
+    <div class="toolbar-actions">
+      <button class="btn" onclick="downloadHTML()" title="Сохранить копию файла на компьютер">Скачать HTML</button>
+      <button class="btn btn-primary" onclick="window.print()">Печать / Сохранить в PDF</button>
+    </div>
+  </div>
+
+  <div class="stage-wrapper">
+
+    <!-- СЛАЙД 1 -->
+    <section class="slide active" data-slide="1">
+      <div class="slide-top">
+        <div class="kicker">ПРОДАЖИ + АВТОМАТИЗАЦИЯ <span>/ КОНЦЕПЦИЯ ДЛЯ ТОРГОВОГО ПРЕДСТАВИТЕЛЯ</span></div>
+        <div class="page-num">01 / 08</div>
+      </div>
+      <div class="slide-body">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-badge">Пилотный проект</div>
+            <h1>Больше заказов.<br>Меньше ручной работы.</h1>
+            <p class="hero-subtitle">
+              Как превратить посты в Threads и Telegram в простой канал дополнительных продаж с актуальным каталогом, корзиной и автоматическим учётом заказов.
+            </p>
+          </div>
+          <div class="hero-card">
+            <div class="hero-card-label">Маршрут клиента</div>
+            <div class="hero-flow">
+              THREADS
+              <span>↓</span>
+              TELEGRAM ЗАКАЗ
+            </div>
+            <div class="hero-card-note">
+              Рабочая идея для быстрого пилотного запуска без сложных интеграций.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЛАЙД 2 -->
+    <section class="slide" data-slide="2">
+      <div class="slide-top">
+        <div class="kicker">ИДЕЯ АВТОМАТИЗАЦИИ <span>/ 01 • ПРОБЛЕМА</span></div>
+        <div class="page-num">02 / 08</div>
+      </div>
+      <div class="slide-body">
+        <h2>Потенциальные клиенты есть. Но путь к заказу часто слишком длинный.</h2>
+        <p class="lead">Дополнительные продажи теряются не только из-за цены или ассортимента — иногда человеку просто неудобно узнать наличие и оформить покупку.</p>
+        <div class="cards-3">
+          <div class="card">
+            <div class="num-pill">01</div>
+            <h3>Прайс приходится отправлять вручную</h3>
+            <p>Каждый запрос — снова искать файл, копировать цены и объяснять ассортимент в личных сообщениях.</p>
+          </div>
+          <div class="card">
+            <div class="num-pill">02</div>
+            <h3>Заказ собирается в переписке</h3>
+            <p>Покупатель пишет позиции и количества текстом, а продавец вручную всё сводит и пересчитывает.</p>
+          </div>
+          <div class="card">
+            <div class="num-pill">03</div>
+            <h3>Цены и остатки меняются</h3>
+            <p>Старый скриншот или пересланное сообщение быстро устаревают — приходится уточнять наличие заново.</p>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-banner">
+        <strong>Идея:</strong> один раз настроить систему, чтобы повторяющиеся действия выполнялись автоматически.
+      </div>
+    </section>
+
+    <!-- СЛАЙД 3 -->
+    <section class="slide" data-slide="3">
+      <div class="slide-top">
+        <div class="kicker">ИДЕЯ АВТОМАТИЗАЦИИ <span>/ 02 • РЕШЕНИЕ</span></div>
+        <div class="page-num">03 / 08</div>
+      </div>
+      <div class="slide-body">
+        <h2>Один простой маршрут от интереса до заказа.</h2>
+        <p class="lead">Покупатель переходит из поста в Telegram-бот, где сразу видит актуальный ассортимент и оформляет покупку без долгой переписки.</p>
+        <div class="flow-4">
+          <div class="card">
+            <div class="num-pill">01</div>
+            <h3>THREADS</h3>
+            <p>Пост с фото товара и коротким предложением.</p>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="card">
+            <div class="num-pill">02</div>
+            <h3>TELEGRAM-БОТ</h3>
+            <p>Актуальный каталог, цены, наличие и корзина.</p>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="card">
+            <div class="num-pill">03</div>
+            <h3>ЗАКАЗ</h3>
+            <p>Покупатель проверяет состав и подтверждает покупку.</p>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="card">
+            <div class="num-pill">04</div>
+            <h3>УЧЁТ</h3>
+            <p>Продавец получает готовый заказ и контакты.</p>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-banner">
+        <strong>Результат:</strong> клиент сам выбирает товар и количество, а продавец получает структурированный заказ.
+      </div>
+    </section>
+
+    <!-- СЛАЙД 4 -->
+    <section class="slide" data-slide="4">
+      <div class="slide-top">
+        <div class="kicker">ИДЕЯ АВТОМАТИЗАЦИИ <span>/ 03 • ДЛЯ ПОКУПАТЕЛЯ</span></div>
+        <div class="page-num">04 / 08</div>
+      </div>
+      <div class="slide-body">
+        <h2>Заказать так же просто, как выбрать товары в интернет-магазине.</h2>
+        <div class="split-2">
+          <div class="phone-mockup">
+            <div class="tg-header">
+              <div class="tg-title"><span class="tg-dot"></span> Telegram • Каталог ROSHEN</div>
+              <div class="tg-badge">Мини-приложение / Бот</div>
+            </div>
+            <div class="tg-grid">
+              <div class="tg-box">
+                <div>
+                  <div class="tg-box-title">Витрина</div>
+                  <p class="tg-note" style="margin: 6px 0 8px;">Актуальный ассортимент, цены и наличие в одном месте.</p>
+                  <div class="tg-item"><span>Шоколад</span><strong>от 45 грн</strong></div>
+                  <div class="tg-item"><span>Печенье</span><strong>от 60 грн</strong></div>
+                </div>
+                <div class="tg-btn">Сделать заказ</div>
+              </div>
+              <div class="tg-box">
+                <div>
+                  <div class="tg-box-title">Корзина</div>
+                  <div class="tg-item" style="margin-top: 6px;"><span>Шоколад × 3</span><strong>135 грн</strong></div>
+                  <div class="tg-item"><span>Печенье × 2</span><strong>120 грн</strong></div>
+                  <div class="tg-total"><span>Итого</span><span>255 грн</span></div>
+                </div>
+                <div class="tg-btn green">Подтвердить заказ</div>
+              </div>
+            </div>
+            <div class="tg-note">Перед подтверждением бот повторно проверяет актуальную цену и доступное количество на складе.</div>
+          </div>
+
+          <div class="feature-list">
+            <div class="feature-item">
+              <h4>Категории и карточки товаров</h4>
+              <p>Шоколад, печенье, вафли и другие группы — удобная навигация вместо длинного PDF-прайса.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Количество и итоговая сумма</h4>
+              <p>Покупатель сразу видит стоимость каждой позиции и общую сумму до подтверждения заказа.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Мгновенное уведомление продавцу</h4>
+              <p>Заказ сохраняется с уникальным номером, точным составом, суммой и контактом клиента.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЛАЙД 5 -->
+    <section class="slide" data-slide="5">
+      <div class="slide-top">
+        <div class="kicker">ИДЕЯ АВТОМАТИЗАЦИИ <span>/ 04 • ДЛЯ ВЛАДЕЛЬЦА</span></div>
+        <div class="page-num">05 / 08</div>
+      </div>
+      <div class="slide-body">
+        <h2>Управление — прямо в Telegram. Без пересылки таблиц и ручного копирования.</h2>
+        <div class="split-2">
+          <div class="admin-panel">
+            <div class="admin-label">Панель владельца в Telegram</div>
+            <div class="admin-row">
+              <div class="admin-row-left"><div class="admin-icon">✎</div> Создать пост</div>
+              <div class="admin-row-right">Фото + описание → готовая публикация</div>
+            </div>
+            <div class="admin-row">
+              <div class="admin-row-left"><div class="admin-icon">⊞</div> Товары и цены</div>
+              <div class="admin-row-right">Синхронизация с Google Sheets</div>
+            </div>
+            <div class="admin-row">
+              <div class="admin-row-left"><div class="admin-icon">☰</div> Новые заказы</div>
+              <div class="admin-row-right">Уведомления и смена статусов</div>
+            </div>
+            <div class="admin-row">
+              <div class="admin-row-left"><div class="admin-icon">↗</div> Статистика</div>
+              <div class="admin-row-right">Количество заказов и выручка</div>
+            </div>
+          </div>
+
+          <div class="feature-list">
+            <div class="feature-item">
+              <h4>Создать пост за 30 секунд</h4>
+              <p>Достаточно отправить фото и пару слов — бот сам соберёт текст по заданному продающему шаблону.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Проверить перед публикацией</h4>
+              <p>Предпросмотр поста в боте, возможность поправить текст и подтверждение владельцем в один клик.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Полный контроль заказов</h4>
+              <p>Новые заявки моментально приходят в Telegram, а вся история автоматически фиксируется в таблице.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЛАЙД 6 -->
+    <section class="slide" data-slide="6">
+      <div class="slide-top">
+        <div class="kicker">ИДЕЯ АВТОМАТИЗАЦИИ <span>/ 05 • ЕДИНАЯ БАЗА</span></div>
+        <div class="page-num">06 / 08</div>
+      </div>
+      <div class="slide-body">
+        <h2>Google Sheets — единый источник актуальных данных.</h2>
+        <p class="lead">Одна привычная таблица для каталога и цен. Любые изменения в ней сразу подхватывает бот — не нужно редактировать каждую карточку вручную.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Категория</th>
+                <th>Название</th>
+                <th>Цена</th>
+                <th>Остаток</th>
+                <th>Активен</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>001</strong></td>
+                <td>Шоколад</td>
+                <td>Товар А</td>
+                <td><strong>45 грн</strong></td>
+                <td>24</td>
+                <td><span class="status-yes">Да</span></td>
+              </tr>
+              <tr>
+                <td><strong>002</strong></td>
+                <td>Печенье</td>
+                <td>Товар Б</td>
+                <td><strong>60 грн</strong></td>
+                <td>15</td>
+                <td><span class="status-yes">Да</span></td>
+              </tr>
+              <tr>
+                <td><strong>003</strong></td>
+                <td>Вафли</td>
+                <td>Товар В</td>
+                <td><strong>38 грн</strong></td>
+                <td>0</td>
+                <td><span class="status-no">Нет</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-caption">* Данные в таблице на слайде приведены как условный пример структуры и не являются актуальным прайсом ROSHEN.</div>
+
+        <div class="cards-3-compact">
+          <div class="card-compact">
+            <h4>Цена и наличие</h4>
+            <p>Бот показывает покупателю только активные позиции с доступным остатком.</p>
+          </div>
+          <div class="card-compact">
+            <h4>История заказов</h4>
+            <p>Каждый подтверждённый заказ записывается отдельной строкой в лист учёта.</p>
+          </div>
+          <div class="card-compact">
+            <h4>Единицы продажи</h4>
+            <p>Гибкий учёт: можно продавать поштучно, упаковками или коробками.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЛАЙД 7 -->
+    <section class="slide" data-slide="7">
+      <div class="slide-top">
+        <div class="kicker">ИДЕЯ АВТОМАТИЗАЦИИ <span>/ 06 • ПУБЛИКАЦИИ</span></div>
+        <div class="page-num">07 / 08</div>
+      </div>
+      <div class="slide-body">
+        <h2>Из одного фото и короткого описания — готовый пост для Threads.</h2>
+        <p class="lead">Владелец отправляет черновик боту. Бот подставляет проверенные названия, актуальные цены из таблицы и ссылку на каталог.</p>
+
+        <div class="io-grid">
+          <div class="io-card">
+            <div class="io-tag">На входе (от владельца)</div>
+            <div class="input-box">
+              <div class="photo-placeholder">ФОТО</div>
+              <div>
+                <div style="font-weight: 700; font-size: 14px;">Фото товара + заметка</div>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">«Шоколад 45 грн. Печенье 60 грн»</div>
+              </div>
+            </div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">
+              Не нужно оформлять текст вручную, проверять форматирование или каждый раз копировать ссылку на бота.
+            </p>
+          </div>
+
+          <div class="flow-arrow">→</div>
+
+          <div class="io-card">
+            <div class="io-tag">На выходе (готовый пост)</div>
+            <div class="post-preview">
+              <div class="post-title">Предложение этой недели!</div>
+              <div class="post-line"><span>Шоколад [название]</span><strong>45 грн</strong></div>
+              <div class="post-line"><span>Печенье [название]</span><strong>60 грн</strong></div>
+              <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
+                Полный ассортимент и быстрое оформление заказа в Telegram:
+              </div>
+              <div class="post-cta">Открыть каталог →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-banner">
+        <strong>Этапность:</strong> сначала предпросмотр и ручное подтверждение; позже можно подключить автопубликацию через официальный Threads API.
+      </div>
+    </section>
+
+    <!-- СЛАЙД 8 -->
+    <section class="slide" data-slide="8">
+      <div class="slide-top">
+        <div class="kicker">ИДЕЯ АВТОМАТИЗАЦИИ <span>/ 07 • ЗАПУСК</span></div>
+        <div class="page-num">08 / 08</div>
+      </div>
+      <div class="slide-body">
+        <h2>Начать с небольшого пилота — проверить спрос и удобство.</h2>
+        <p class="lead">Не обязательно сразу автоматизировать всё. Достаточно запустить базовый каталог и приём заказов, а затем добавить генерацию публикаций.</p>
+
+        <div class="steps-3">
+          <div class="card">
+            <div class="step-badge">Шаг 1 • Старт</div>
+            <h3>Рабочий MVP</h3>
+            <p>Каталог из Google Sheets, категории, корзина, проверка остатков и подтверждение заказа в Telegram.</p>
+          </div>
+          <div class="card">
+            <div class="step-badge">Шаг 2 • Контент</div>
+            <h3>Контент-помощник</h3>
+            <p>Админ-меню, создание поста по фото и описанию, предпросмотр и быстрое копирование в Threads.</p>
+          </div>
+          <div class="card">
+            <div class="step-badge">Шаг 3 • Масштаб</div>
+            <h3>Развитие системы</h3>
+            <p>Автопубликация через API, аналитика продаж, повторные заказы и уведомления об обновлении ассортимента.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="bottom-banner" style="margin-top: 14px;">
+          <strong>Идея для пилота:</strong> протестировать связку на ограниченном ассортименте и реальных заказах, прежде чем масштабировать.
+        </div>
+        <div class="legal-note">
+          Важно: проект не является официальным сервисом ROSHEN. Перед запуском необходимо согласовать формат продаж, использование бренда/материалов и правила учёта товара с компанией.
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-bar">
+    <div class="dots" id="dots"></div>
+    <div class="nav-buttons">
+      <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Назад</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="changeSlide(1)">Вперёд →</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let current = 0;
+
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('button');
+      dot.className = 'dot' + (idx === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Слайд ${idx + 1}`);
+      dot.onclick = () => goToSlide(idx);
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    function updateUI() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+    }
+
+    function changeSlide(dir) {
+      const next = current + dir;
+      if (next >= 0 && next < slides.length) {
+        current = next;
+        updateUI();
+      }
+    }
+
+    function goToSlide(index) {
+      current = index;
+      updateUI();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft') {
+        changeSlide(-1);
+      }
+    });
+
+    function downloadHTML() {
+      const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'telegram_sales_automation_pitch.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>
